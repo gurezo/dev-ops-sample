@@ -9,7 +9,7 @@ import { Memo } from '../models';
 export class ApiService {
   http = inject(HttpClient);
 
-  apiUrl = 'サーバーアドレス/api/memos';
+  apiUrl = 'http://ik1-438-51017.vs.sakura.ne.jp/api/memos';
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',

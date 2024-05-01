@@ -24,7 +24,7 @@ impl Memo {
 
 #[get("/api/memos")]
 async fn get_memos() -> impl Responder {
-    let url = "mysql://ユーザー名:パスワード@ホスト名:3306/データベース名";
+    let url = "mysql://gurezo:KGR@khkyzr500@ik1-438-51017.vs.sakura.ne.jp:3306/mydatabase";
     let pool = Pool::new(url).unwrap();
     let mut conn = pool.get_conn().unwrap();
 
@@ -38,7 +38,7 @@ async fn get_memos() -> impl Responder {
 #[get("/api/memos/{id}")]
 async fn get_memo_by_id(req: HttpRequest) -> impl Responder {
     let id: i32 = req.match_info().get("id").unwrap().parse().unwrap();
-    let url = "mysql://ユーザー名:パスワード@ホスト名:3306/データベース名";
+    let url = "mysql://gurezo:KGR@khkyzr500@ik1-438-51017.vs.sakura.ne.jp:3306/mydatabase";
     let pool = Pool::new(url).unwrap();
     let mut conn = pool.get_conn().unwrap();
 
@@ -55,7 +55,7 @@ async fn get_memo_by_id(req: HttpRequest) -> impl Responder {
 
 #[post("/api/memos")]
 async fn create_memo(req_body: web::Json<Memo>) -> HttpResponse {
-    let url = "mysql://ユーザー名:パスワード@ホスト名:3306/データベース名";
+    let url = "mysql://gurezo:KGR@khkyzr500@ik1-438-51017.vs.sakura.ne.jp:3306/mydatabase";
     let pool = Pool::new(url).unwrap();
     let mut conn = pool.get_conn().unwrap();
 
@@ -77,7 +77,7 @@ async fn update_memo(id: web::Path<i32>, req_body: web::Json<Memo>) -> HttpRespo
     let memo_id = id.into_inner();
     let updated_memo = req_body.into_inner();
 
-    let url = "mysql://ユーザー名:パスワード@ホスト名:3306/データベース名";
+    let url = "mysql://gurezo:KGR@khkyzr500@ik1-438-51017.vs.sakura.ne.jp:3306/mydatabase";
     let pool = Pool::new(url).unwrap();
     let mut conn = pool.get_conn().unwrap();
 
@@ -98,7 +98,7 @@ async fn update_memo(id: web::Path<i32>, req_body: web::Json<Memo>) -> HttpRespo
 async fn delete_memo(id: web::Path<i32>) -> HttpResponse {
     let memo_id = id.into_inner();
 
-    let url = "mysql://ユーザー名:パスワード@ホスト名:3306/データベース名";
+    let url = "mysql://gurezo:KGR@khkyzr500@ik1-438-51017.vs.sakura.ne.jp:3306/mydatabase";
     let pool = Pool::new(url).unwrap();
     let mut conn = pool.get_conn().unwrap();
 
