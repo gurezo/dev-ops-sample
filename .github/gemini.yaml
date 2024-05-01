@@ -1,0 +1,57 @@
+name: Deploy Angular & Rust to Sakura VPS (using sftp command) with Environment Setup
+
+on:
+  push:
+    branches: [ master, main ]
+
+env:
+  SFTP_HOST: <さくらVPSのホスト名>
+  SFTP_USERNAME: <SFTPユーザー名>
+  SFTP_PASSWORD: <SFTPパスワード>
+  ANGULAR_DIR: <Angularプロジェクトのディレクトリパス>
+  RUST_DIR: <Rustプロジェクトのディレクトリパス>
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install sftp command
+        run: |
+          sudo apt-get update && sudo apt-get install -y openssh-client
+
+      - name: Setup npm, node and rust environment
+        run: |
+          sudo apt-get update && sudo apt-get install -y curl gnupg2 lsb-release
+          curl -sSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          curl -sSL https://packages.rust-lang.org/setup-chroot.sh | sudo -E bash -
+          sudo apt-get install -y rustc cargo
+
+      - name: Build Angular application
+        run: |
+          cd ${{ env.ANGULAR_DIR }}
+          npm install
+          ng build
+
+      - name: Build Rust application
+        run: |
+          cd ${{ env.RUST_DIR }}
+          cargo build --release
+
+      - name: Deploy Angular application
+        run: |
+          sftp ${{ env.SFTP_USERNAME }}@${{ env.SFTP_HOST }} << EOF
+          mkdir -p ${{ env.ANGULAR_DIR }}
+          put -r dist/* ${{ env.ANGULAR_DIR }}
+          EOF
+
+      - name: Deploy Rust application
+        run: |
+          sftp ${{ env.SFTP_USERNAME }}@${{ env.SFTP_HOST }} << EOF
+          mkdir -p ${{ env.RUST_DIR }}
+          put -r target/release/* ${{ env.RUST_DIR }}
+          EOF

@@ -1,0 +1,40 @@
+name: Deploy to Sakura VPS
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Angular dependencies
+        run: npm install -g @angular/cli && npm install
+
+      - name: Build Angular app
+        run: ng build --prod
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Build Rust code
+        run: cargo build --release
+
+      - name: Deploy to Sakura VPS
+        run: scp -r dist/* target/release/* ${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_SERVER }}:/path/to/deploy/directory
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
