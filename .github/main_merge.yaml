@@ -4,13 +4,6 @@ on:
   push:
     branches: [ master, main ]
 
-# env:
-#   SFTP_HOST: <さくらVPSのホスト名>
-#   SFTP_USERNAME: <SFTPユーザー名>
-#   SFTP_PASSWORD: <SFTPパスワード>
-#   ANGULAR_DIR: <Angularプロジェクトのディレクトリパス>
-#   RUST_DIR: <Rustプロジェクトのディレクトリパス>
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
